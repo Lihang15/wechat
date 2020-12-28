@@ -30,23 +30,26 @@
         let input = document.querySelector('input')
         let btn = document.querySelector('button')
         let div = document.querySelector('div')
-        let ws = new WebSocket(`ws://localhost:3000/${id}`)
+        let ws = new WebSocket(`ws://localhost:3000`)
         ws.addEventListener('open', () => {
             console.log("连接websocket成功")
         })
         btn.addEventListener('click', () => {
             let val = input.value
-            ws.send(val)
+            const msg = {
+                toid: 2,
+                data: val
+            }
+            const jsonstr = JSON.stringify(msg)
+            ws.send(jsonstr)
             input.value = ''
         })
-        const msg = {
-            toid: 2,
-            data: ""
-        }
+        
         ws.addEventListener('message', (e) => {
             // div.innerHTML = e.data
             var dv = document.createElement('div')
-            dv.innerText = e.data
+            let {data}  = JSON.parse(e.data)
+            dv.innerText =data
             div.appendChild(dv)
         })
     </script>
